@@ -2,7 +2,7 @@
 import React from "react";
 import useSWR from "swr";
 import ProductCard from "./product-card";
-import { Box, Grid, GridItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { Grid, SimpleGrid, Text } from "@chakra-ui/react";
 import { Product } from "@/models/product";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -25,13 +25,6 @@ const ProductList = () => {
         {data &&
           products.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
-
-            // <div key={product.id}>
-            //     <img src={product.image} alt={product.name} width={200} height={'auto'} style={{aspectRatio: 1}}/>
-            //     <h3>{product.name}</h3>
-            //     <p>{product.description}</p>
-            //     <p>Price: ${product.price}</p>
-            // </div>
           ))}
       </SimpleGrid>
     </Grid>

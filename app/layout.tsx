@@ -32,7 +32,7 @@ export default function RootLayout({
         <div className="root-container">
           <Provider>
             <Header />
-            <Box as="main" width={"100%"} p="4">
+            <Box as="main" width={"100%"} p="4" display={"flex"} alignItems={'flex-start'} justifyContent={'center'} flexGrow={1}>
               {children}
             </Box>
             <Footer />

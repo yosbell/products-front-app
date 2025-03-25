@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import useSWRInfinite from "swr/infinite";
-import ProductCard from "./product-card";
+import ReviewedProductCard from "./reviewed-product-card";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -10,42 +10,43 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
   if (previousPageData && !previousPageData.length) return null; // reached the end
   return `https://67e1958758cc6bf785266944.mockapi.io/api/v1/products?page=${
     pageIndex + 1
-  }&limit=7`; // SWR key
+  }&limit=7`;
 };
 
 const ProductsReviewPage: React.FC = () => {
-//   const [page, setPage] = useState(1);
   const { data, size, setSize } = useSWRInfinite(getKey, fetcher, {
-    revalidateOnFocus: false,
+    revalidateFirstPage: false,
   });
-//   if (!data) return "loading";
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     if (scrollHeight - scrollTop === clientHeight) {
       setSize(size + 1);
-      //   mutate();
     }
   };
 
-  //   if (error) return <Text>Error loading products</Text>;
-
   return (
-    <Box onScroll={handleScroll} height="95vh" overflowY="auto" p={4}>
-      {data?.map((products, page: number) =>
-        products.map((product: any, indexInPage: number) => (
-          <ProductCard
-            key={`product-review-${page}-${indexInPage}`}
-            product={product}
-          />
-        ))
-      )}
-      {!data && (
-        <Box display="flex" justifyContent="center" mt={4}>
+    <Flex flexDirection={"column"} gap={2} onScroll={handleScroll} width={"800px"} height={'calc(100vh - 145px)'} maxHeight={{base: 2400, md: '1400px'}} overflowY="auto" alignItems={"flex-start"} flexWrap={"nowrap"}>
+      <Text fontWeight="bold" fontSize="sm" as="h1">
+        Reviewed products
+      </Text>
+      <Flex gap="2" flexDirection={'row'} justifyContent={'flex-start'} width={"100%"} alignItems={"center"} flexWrap={"wrap"}>
+        {data?.map((products, page: number) =>
+          products.map((product: any, indexInPage: number) => (
+            <ReviewedProductCard
+              key={`product-review-${page}-${indexInPage}`}
+              product={product}
+            />
+          ))
+        )}
+      </Flex>
+
+      {(!data || data[size - 1] === undefined) && (
+        <Box display="flex" justifyContent="center" mt={4} width={'100%'}>
           <Spinner />
         </Box>
       )}
-    </Box>
+    </Flex>
   );
 };
 

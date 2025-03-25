@@ -8,14 +8,16 @@ const Header: React.FC = () => {
       justifyContent={"center"}
       alignItems={"flex-start"}
       p={4}
+      width={"100%"}
+      borderBottom={"1px solid #eaeaea"}
     >
       <Link href="/">
         <h1>Yosbel.dev</h1>
       </Link>
-      <Box flexGrow={1}></Box>{" "}
+      <Box flexGrow={1}></Box>
       <nav>
         {/* <Link href="/">Home</Link> */}
-        <Link href="/products-review">Products Review</Link>
+        <Link href="/products-review">Products Reviewed</Link>
       </nav>
     </Flex>
   );
