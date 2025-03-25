@@ -4,16 +4,10 @@ import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import useSWRInfinite from "swr/infinite";
 import ReviewedProductCard from "./reviewed-product-card";
 import { fetcher } from "@/utils/api/fetcher";
-
-const getKey = (pageIndex: number, previousPageData: any[]) => {
-  if (previousPageData && !previousPageData.length) return null; // reached the end
-  return `https://67e1958758cc6bf785266944.mockapi.io/api/v1/products?page=${
-    pageIndex + 1
-  }&limit=7`;
-};
+import { getProductKey } from "@/utils/swr/get-product-key";
 
 const ProductsReviewPage: React.FC = () => {
-  const { data, size, setSize } = useSWRInfinite(getKey, fetcher, {
+  const { data, size, setSize } = useSWRInfinite(getProductKey, fetcher, {
     revalidateFirstPage: false,
   });
 
