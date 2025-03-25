@@ -2,32 +2,24 @@
 import React from "react";
 import useSWR from "swr";
 import ProductCard from "./product-card";
-import { Box, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { Box, Grid, GridItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { Product } from "@/models/product";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export interface Product {
-  id: number;
-  image: string;
-  name: string;
-  description: string;
-  price: number;
-}
 
 const ProductList = () => {
   const { data, error, isLoading } = useSWR(
-    `https://67e1958758cc6bf785266944.mockapi.io/api/v1/products`,
+    `https://67e1958758cc6bf785266944.mockapi.io/api/v1/products?limit=10&page=1`,
     fetcher
   );
   const products = data as Product[];
   return (
-    <Box width={"100%"}>
-      <h1>Products Page</h1>
-      <p>
-        Welcome to the products page. Here you will find a variety of products
-        available for purchase.
-      </p>
-      <SimpleGrid gap="6" minChildWidth="260px" width={"100%"}>
+    <Grid width={"100%"} gap={2}>
+      <Text fontWeight="bold" fontSize="sm" as="h1">
+        Products
+      </Text>
+      <SimpleGrid gap="2" minChildWidth="260px" width={"100%"}>
         {isLoading && <p>Loading...</p>}
         {error && <p>Error loading products</p>}
         {data &&
@@ -42,7 +34,7 @@ const ProductList = () => {
             // </div>
           ))}
       </SimpleGrid>
-    </Box>
+    </Grid>
   );
 };
 

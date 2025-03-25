@@ -7,7 +7,8 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react";
-import { Product } from "./product-list";
+import ProductCard from "./product-card";
+import { Product } from "@/models/product";
 
 interface DialogProductProps {
   product: Product;
@@ -30,7 +31,8 @@ const DialogProduct: React.FC<DialogProductProps> = ({ product }) => {
               <Dialog.Title>Product:</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
-              <Box p="2">
+              <ProductCard product={product} />
+              {/* <Box p="2">
                 <Image
                   src={image}
                   alt={name}
@@ -62,14 +64,8 @@ const DialogProduct: React.FC<DialogProductProps> = ({ product }) => {
                 >
                   ${price}
                 </Text>
-              </Box>
+              </Box> */}
             </Dialog.Body>
-            {/* <Dialog.Footer>
-              <Dialog.ActionTrigger asChild>
-                <Button variant="outline">Cancel</Button>
-              </Dialog.ActionTrigger>
-              <Button>Save</Button>
-            </Dialog.Footer> */}
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" />
             </Dialog.CloseTrigger>
