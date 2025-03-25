@@ -4,8 +4,7 @@ import useSWR from "swr";
 import ProductCard from "./product-card";
 import { Grid, SimpleGrid, Text } from "@chakra-ui/react";
 import { Product } from "@/models/product";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "@/utils/api/fetcher";
 
 
 const ProductList = () => {

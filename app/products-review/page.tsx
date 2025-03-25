@@ -3,8 +3,7 @@ import React from "react";
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import useSWRInfinite from "swr/infinite";
 import ReviewedProductCard from "./reviewed-product-card";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "@/utils/api/fetcher";
 
 const getKey = (pageIndex: number, previousPageData: any[]) => {
   if (previousPageData && !previousPageData.length) return null; // reached the end
