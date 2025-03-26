@@ -1,17 +1,14 @@
-import styles from "./page.module.css";
-import Footer from "@/components/common/footer";
-import Header from "@/components/common/header";
-import ProductList from "@/components/products/product-list";
-import { Box } from "@chakra-ui/react";
+import ProductList from "@/app/products/product-list";
+import { Grid, Text } from "@chakra-ui/react";
+
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <Header />
-      <Box as="main" width={'100%'} p="4">
-        <ProductList />
-      </Box>
-      <Footer />
-    </div>
+    <Grid width={"100%"} gap={2}>
+      <Text fontWeight="bold" fontSize="sm" as="h1">
+        Products
+      </Text>
+      <ProductList />
+    </Grid>
   );
 }

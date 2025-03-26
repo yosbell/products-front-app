@@ -40,3 +40,11 @@ a {
     color-scheme: dark;
   }
 }
+
+.root-container {
+  height: 100svh;
+  max-height: 100svh;
+  font-family: var(--font-geist-sans);
+  display: flex;
+  flex-direction: column;
+}
