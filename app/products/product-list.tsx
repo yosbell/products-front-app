@@ -9,7 +9,7 @@ import CenterLoading from "@/components/common/center-loading";
 
 const ProductList = () => {
   const { data, error, isLoading } = useSWR(
-    `https://67e1958758cc6bf785266944.mockapi.io/api/v1/products?limit=10&page=1`,
+    `${process.env.NEXT_PUBLIC_API_URL}products?limit=10&page=1`,
     fetcher
   );
   const products = data as Product[];

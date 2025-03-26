@@ -1,6 +1,7 @@
 import ProductList from "@/app/products/product-list";
 import { Grid, Text } from "@chakra-ui/react";
 
+
 export default function Home() {
   return (
     <Grid width={"100%"} gap={2}>
