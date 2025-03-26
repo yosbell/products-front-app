@@ -2,45 +2,26 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Text } from "@chakra-ui/react";
 import ProductReviewedList from "./product-reviewed-list";
-import { Product } from "@/models/product";
-import ProductService from "@/services/product-service";
-import ApiClient from "@/utils/api/api-client";
+import { useAppDispatch, useAppSelector } from "@/libs/redux/hooks";
+import {
+  fetchAccProductsAction,
+  selectAccProducts,
+  selectError,
+  selectHasMoreAccProducts,
+  selectIsLoading,
+} from "@/libs/redux/slices/productSlice";
 
 const ProductsReviewPage: React.FC = () => {
   const [page, setPage] = useState(1);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<any>(null);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-
-  const productService: ProductService = new ProductService(
-    new ApiClient(process.env.NEXT_PUBLIC_API_URL || "", "products")
-  );
+  const accProducts = useAppSelector(selectAccProducts);
+  const hasMoreAccProducts = useAppSelector(selectHasMoreAccProducts);
+  const isLoading = useAppSelector(selectIsLoading);
+  const error = useAppSelector(selectError);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const loadProducts = async () => {
-      setIsLoading(true);
-      try {
-        const newProducts: Product[] = await productService.getProducts(
-          page,
-          7
-        );
-        setProducts((prevProducts: Product[]) => [
-          ...prevProducts,
-          ...newProducts,
-        ]);
-        if (newProducts.length < 7) {
-          setHasMore(false);
-        }
-      } catch (err) {
-        setError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (hasMore) {
-      loadProducts();
+    if (hasMoreAccProducts) {
+      dispatch(fetchAccProductsAction(page, 7));
     }
   }, [page]);
 
@@ -66,7 +47,11 @@ const ProductsReviewPage: React.FC = () => {
       <Text fontWeight="bold" fontSize="sm" as="h1">
         Reviewed products
       </Text>
-      <ProductReviewedList products={products} isLoading={isLoading} error={error} />
+      <ProductReviewedList
+        products={accProducts}
+        isLoading={isLoading}
+        error={error}
+      />
     </Flex>
   );
 };

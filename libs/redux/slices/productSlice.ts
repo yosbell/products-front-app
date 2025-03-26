@@ -10,6 +10,8 @@ interface ProductState {
   isLoading: boolean;
   error: any;
   idProductDeleting: number;
+  accProducts: Product[];
+  hasMoreAccProducts: boolean;
 }
 
 const initialState: ProductState = {
@@ -17,6 +19,8 @@ const initialState: ProductState = {
   isLoading: false,
   error: null,
   idProductDeleting: -1,
+  accProducts: [],
+  hasMoreAccProducts: true,
 };
 
 export const productSlice = createSlice({
@@ -25,6 +29,12 @@ export const productSlice = createSlice({
   reducers: {
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.products = action.payload;
+    },
+    setAccProducts: (state, action: PayloadAction<Product[]>) => {
+      state.accProducts = [...state.accProducts, ...action.payload];
+    },
+    setHasMoreAccProducts: (state, action: PayloadAction<boolean>) => {
+      state.hasMoreAccProducts = action.payload;
     },
     startFetch: (state) => {
       state.isLoading = true;
@@ -54,6 +64,8 @@ export const productSlice = createSlice({
 
 export const {
   setProducts,
+  setAccProducts,
+  setHasMoreAccProducts,
   startFetch,
   endFetch,
   setError,
@@ -67,6 +79,10 @@ export const selectIsLoading = (state: RootState) => state.product.isLoading;
 export const selectError = (state: RootState) => state.product.error;
 export const selectIdProductDeleting = (state: RootState) =>
   state.product.idProductDeleting;
+export const selectAccProducts = (state: RootState) =>
+  state.product.accProducts;
+export const selectHasMoreAccProducts = (state: RootState) =>
+  state.product.hasMoreAccProducts;
 
 export const fetchProductsAction =
   (page: number, limit: number) => async (dispatch: AppDispatch) => {
@@ -78,6 +94,29 @@ export const fetchProductsAction =
       .getProducts(page, limit)
       .then((products: Product[]) => {
         dispatch(setProducts(products));
+      })
+      .catch((error: any) => {
+        dispatch(setError(error));
+      })
+      .finally(() => {
+        dispatch(endFetch());
+      });
+  };
+
+export const fetchAccProductsAction =
+  (page: number, limit: number = 7) =>
+  async (dispatch: AppDispatch) => {
+    dispatch(startFetch());
+    const productService: ProductService = new ProductService(
+      new ApiClient(process.env.NEXT_PUBLIC_API_URL || "", "products")
+    );
+    productService
+      .getProducts(page, limit)
+      .then((products: Product[]) => {
+        dispatch(setAccProducts(products));
+        if (products.length < 7) {
+          setHasMoreAccProducts(false);
+        }
       })
       .catch((error: any) => {
         dispatch(setError(error));
