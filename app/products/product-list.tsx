@@ -1,25 +1,49 @@
 "use client";
-import React from "react";
-import useSWR from "swr";
+import React, { useEffect, useState } from "react";
 import ProductCard from "./product-card";
 import { SimpleGrid } from "@chakra-ui/react";
 import { Product } from "@/models/product";
-import { fetcher } from "@/utils/api/fetcher";
 import CenterLoading from "@/components/common/center-loading";
+import ProductService from "@/services/product-service";
+import ApiClient from "@/utils/api/api-client";
 
 const ProductList = () => {
-  const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}products?limit=10&page=1`,
-    fetcher
+  const [products, serProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<any>(null);
+  const [uiVersion, setUIVersion] = useState<number>(0);
+
+  const productService: ProductService = new ProductService(
+    new ApiClient(process.env.NEXT_PUBLIC_API_URL || "", "products")
   );
-  const products = data as Product[];
+
+  useEffect(() => {
+    setIsLoading(true);
+    productService
+      .getProducts(1, 10)
+      .then((products: Product[]) => {
+        serProducts(products);
+        console.log(products);
+      })
+      .catch((error: any) => {
+        setError(error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [uiVersion]);
+
+  const handleRefreshList = () => {
+    setUIVersion(prevUIVersion => prevUIVersion + 1);
+  }
+
   return (
     <SimpleGrid gap="2" minChildWidth="260px" width={"100%"}>
       {isLoading && <CenterLoading />}
       {error && <p>Error loading products</p>}
       {products &&
         products.map((product: Product) => (
-          <ProductCard key={`product-list-${product.id}`} product={product} />
+          <ProductCard key={`product-list-${product.id}`} product={product} refreshList={handleRefreshList} />
         ))}
     </SimpleGrid>
   );

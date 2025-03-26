@@ -5,13 +5,15 @@ import ProductReviewedCard from "./product-reviewed-card";
 import CenterLoading from "@/components/common/center-loading";
 
 interface ProductReviewedListProps {
-  data: any[] | undefined;
-  size: number;
+  products: Product[] | undefined;
+  error: any;
+  isLoading: boolean;
 }
 
 const ProductReviewedList: React.FC<ProductReviewedListProps> = ({
-  data,
-  size,
+  products,
+  isLoading,
+  error,
 }) => {
   return (
     <React.Fragment>
@@ -23,17 +25,21 @@ const ProductReviewedList: React.FC<ProductReviewedListProps> = ({
         alignItems={"center"}
         flexWrap={"wrap"}
       >
-        {data?.map((products, page: number) =>
+        {products && (
           products.map((product: Product, indexInPage: number) => (
             <ProductReviewedCard
-              key={`product-review-${page}-${indexInPage}`}
+              key={`product-review-${indexInPage}`}
               product={product}
             />
           ))
         )}
       </Flex>
 
-      {(!data || data[size - 1] === undefined) && <CenterLoading />}
+      {isLoading && <CenterLoading />}
+      {error && <p>Error loading products
+        <br />
+        {error}S
+      </p>}
     </React.Fragment>
   );
 };
