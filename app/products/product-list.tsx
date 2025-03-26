@@ -23,7 +23,6 @@ const ProductList = () => {
       .getProducts(1, 10)
       .then((products: Product[]) => {
         serProducts(products);
-        console.log(products);
       })
       .catch((error: any) => {
         setError(error);
