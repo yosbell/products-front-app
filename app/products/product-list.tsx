@@ -4,38 +4,23 @@ import ProductCard from "./product-card";
 import { SimpleGrid } from "@chakra-ui/react";
 import { Product } from "@/models/product";
 import CenterLoading from "@/components/common/center-loading";
-import ProductService from "@/services/product-service";
-import ApiClient from "@/utils/api/api-client";
+import { useAppSelector, useAppDispatch } from "@/libs/redux/hooks";
+import {
+  fetchProductsAction,
+  selectError,
+  selectIsLoading,
+  selectProducts,
+} from "@/libs/redux/slices/productSlice";
 
 const ProductList = () => {
-  const [products, serProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<any>(null);
-  const [uiVersion, setUIVersion] = useState<number>(0);
-
-  const productService: ProductService = new ProductService(
-    new ApiClient(process.env.NEXT_PUBLIC_API_URL || "", "products")
-  );
+  const products = useAppSelector(selectProducts);
+  const isLoading = useAppSelector(selectIsLoading);
+  const error = useAppSelector(selectError);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setIsLoading(true);
-    productService
-      .getProducts(1, 10)
-      .then((products: Product[]) => {
-        serProducts(products);
-        console.log(products);
-      })
-      .catch((error: any) => {
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [uiVersion]);
-
-  const handleRefreshList = () => {
-    setUIVersion(prevUIVersion => prevUIVersion + 1);
-  }
+    dispatch(fetchProductsAction(1, 10));
+  }, []);
 
   return (
     <SimpleGrid gap="2" minChildWidth="260px" width={"100%"}>
@@ -43,7 +28,10 @@ const ProductList = () => {
       {error && <p>Error loading products</p>}
       {products &&
         products.map((product: Product) => (
-          <ProductCard key={`product-list-${product.id}`} product={product} refreshList={handleRefreshList} />
+          <ProductCard
+            key={`product-list-${product.id}`}
+            product={product}
+          />
         ))}
     </SimpleGrid>
   );

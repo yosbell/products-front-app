@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Provider } from "@/components/ui/provider";
+import { Provider as ProviderChakra } from "@/components/ui/provider";
 import Header from "@/components/common/header";
 import Footer from "@/components/common/footer";
 import { Box } from "@chakra-ui/react";
+import StoreProvider from "./StoreProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,13 +31,23 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div className="root-container">
-          <Provider>
-            <Header />
-            <Box as="main" width={"100%"} p="4" display={"flex"} alignItems={'flex-start'} justifyContent={'center'} flexGrow={1}>
-              {children}
-            </Box>
-            <Footer />
-          </Provider>
+          <StoreProvider>
+            <ProviderChakra>
+              <Header />
+              <Box
+                as="main"
+                width={"100%"}
+                p="4"
+                display={"flex"}
+                alignItems={"flex-start"}
+                justifyContent={"center"}
+                flexGrow={1}
+              >
+                {children}
+              </Box>
+              <Footer />
+            </ProviderChakra>
+          </StoreProvider>
         </div>
       </body>
     </html>

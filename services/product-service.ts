@@ -20,7 +20,7 @@ class ProductService {
     async getProductById(productId: number): Promise<Product> {
         try {
             const response = await this.apiClient.getById(productId);
-            return response.data;
+            return response;
         } catch (error) {
             throw new Error(`Error fetching product with id ${productId}`);
         }
@@ -29,7 +29,7 @@ class ProductService {
     async createProduct(productData: Product): Promise<Product> {
         try {
             const response = await this.apiClient.post(productData);
-            return response.data;
+            return response;
         } catch (error) {
             throw new Error('Error creating product');
         }
@@ -38,7 +38,7 @@ class ProductService {
     async updateProduct(productId: number, productData: Product): Promise<Product> {
         try {
             const response = await this.apiClient.put(productId, productData);
-            return response.data;
+            return response;
         } catch (error) {
             throw new Error(`Error updating product with id ${productId}`);
         }
@@ -47,7 +47,7 @@ class ProductService {
     async deleteProduct(productId: number): Promise<any> {
         try {
             const response = await this.apiClient.delete(productId);
-            return response.data;
+            return response;
         } catch (error) {
             throw new Error(`Error deleting product with id ${productId}`);
         }
