@@ -2,10 +2,10 @@
 import React from "react";
 import useSWR from "swr";
 import ProductCard from "./product-card";
-import { Grid, SimpleGrid, Text } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import { Product } from "@/models/product";
 import { fetcher } from "@/utils/api/fetcher";
-
+import CenterLoading from "@/components/common/center-loading";
 
 const ProductList = () => {
   const { data, error, isLoading } = useSWR(
@@ -14,19 +14,14 @@ const ProductList = () => {
   );
   const products = data as Product[];
   return (
-    <Grid width={"100%"} gap={2}>
-      <Text fontWeight="bold" fontSize="sm" as="h1">
-        Products
-      </Text>
-      <SimpleGrid gap="2" minChildWidth="260px" width={"100%"}>
-        {isLoading && <p>Loading...</p>}
-        {error && <p>Error loading products</p>}
-        {data &&
-          products.map((product: Product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-      </SimpleGrid>
-    </Grid>
+    <SimpleGrid gap="2" minChildWidth="260px" width={"100%"}>
+      {isLoading && <CenterLoading />}
+      {error && <p>Error loading products</p>}
+      {products &&
+        products.map((product: Product) => (
+          <ProductCard key={`product-list-${product.id}`} product={product} />
+        ))}
+    </SimpleGrid>
   );
 };
 

@@ -17,7 +17,7 @@ const Header: React.FC = () => {
       <Box flexGrow={1}></Box>
       <nav>
         {/* <Link href="/">Home</Link> */}
-        <Link href="/products-review">Products Reviewed</Link>
+        <Link href="/products-reviewed">Products Reviewed</Link>
       </nav>
     </Flex>
   );
