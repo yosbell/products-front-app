@@ -11,6 +11,7 @@ const ProductList = () => {
   const [products, serProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
+  const [uiVersion, setUIVersion] = useState<number>(0);
 
   const productService: ProductService = new ProductService(
     new ApiClient(process.env.NEXT_PUBLIC_API_URL || "", "products")
@@ -30,16 +31,19 @@ const ProductList = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [uiVersion]);
 
-  // const products = data as Product[];
+  const handleRefreshList = () => {
+    setUIVersion(prevUIVersion => prevUIVersion + 1);
+  }
+
   return (
     <SimpleGrid gap="2" minChildWidth="260px" width={"100%"}>
       {isLoading && <CenterLoading />}
       {error && <p>Error loading products</p>}
       {products &&
         products.map((product: Product) => (
-          <ProductCard key={`product-list-${product.id}`} product={product} />
+          <ProductCard key={`product-list-${product.id}`} product={product} refreshList={handleRefreshList} />
         ))}
     </SimpleGrid>
   );
