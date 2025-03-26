@@ -11,7 +11,7 @@ class ProductService {
     async getProducts(page: number = 1, limit: number = 10): Promise<Product[]> {
         try {
             const response = await this.apiClient.get({ page, limit });
-            return response.data;
+            return response;
         } catch (error) {
             throw new Error('Error fetching products');
         }
@@ -54,4 +54,4 @@ class ProductService {
     }
 }
 
-export { ProductService };
+export default ProductService;;
